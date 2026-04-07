@@ -1,0 +1,33 @@
+<div class="card-grid">
+{% for name in inverters %}
+  <div class="card inverter-card">
+    <div class="card-top">
+      <h2>{{ name }}</h2>
+      <div class="actions">
+        <button class="btn btn-secondary"
+                hx-get="/inverters/{{ name }}"
+                hx-target="#inverter-panel"
+                hx-swap="innerHTML">
+          Edit
+        </button>
+        <button class="btn btn-danger"
+                hx-post="/inverters/{{ name }}/delete"
+                hx-target="#inverter-list"
+                hx-swap="innerHTML"
+                hx-confirm="Delete inverter '{{ name }}'?">
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="inverter-status"
+         hx-get="/inverters/{{ name }}/status"
+         hx-trigger="load, every 30s"
+         hx-swap="innerHTML">
+      <span class="status-waiting">Loading...</span>
+    </div>
+  </div>
+{% else %}
+  <p style="color:#888">No inverters configured yet.</p>
+{% endfor %}
+</div>

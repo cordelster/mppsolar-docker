@@ -1,0 +1,54 @@
+{# HTMX partial — auto-polled every {pause}s by the inverter card #}
+<div class="status-header">
+  <span class="status-dot {{ 'dot-up' if svc.up else 'dot-down' }}"></span>
+  <span class="status-label">{{ 'Running' if svc.up else 'Stopped' }}</span>
+  {% if svc.up and svc.uptime_s is not none %}
+  <span class="status-uptime">up {{ fmt_uptime(svc.uptime_s) }}</span>
+  {% endif %}
+</div>
+
+{% if values %}
+<div class="metric-grid">
+  {% set shown = namespace(labels=[]) %}
+
+  {# Group battery fields together #}
+  {% set bv = values.get('battery_voltage') %}
+  {% set bc = values.get('battery_capacity') %}
+  {% if bv or bc %}
+  <div class="metric">
+    <span class="metric-label">Battery</span>
+    <span class="metric-value">
+      {% if bv %}{{ bv }}V{% endif %}
+      {% if bv and bc %} · {% endif %}
+      {% if bc %}
+      <span class="{{ 'metric-warn' if bc|int < 30 else '' }}">{{ bc }}%</span>
+      {% endif %}
+    </span>
+  </div>
+  {% endif %}
+
+  {% for field, val in values.items() %}
+    {% if field not in ('battery_voltage', 'battery_capacity') %}
+    {% set info = HEALTH_FIELDS.get(field) %}
+    {% if info and info[0] not in shown.labels %}
+    {% set shown.labels = shown.labels | list + [info[0]] %}
+    <div class="metric">
+      <span class="metric-label">{{ info[0] }}</span>
+      <span class="metric-value">{{ val }}{{ info[1] }}</span>
+    </div>
+    {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% elif svc.up and mqtt.connected %}
+<p class="status-waiting">Waiting for first poll...</p>
+{% elif svc.up and not mqtt.connected %}
+<p class="status-waiting">MQTT not connected{% if mqtt.error %}: {{ mqtt.error }}{% endif %}</p>
+{% endif %}
+
+<div class="status-footer">
+  {% if mqtt.last_seen %}
+  <span>Last data: {{ fmt_ago(mqtt.last_seen) }}</span>
+  <span>· {{ mqtt.count }} msgs</span>
+  {% endif %}
+</div>

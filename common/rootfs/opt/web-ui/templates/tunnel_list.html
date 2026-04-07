@@ -1,0 +1,38 @@
+{% for name, t in tunnels.items() %}
+<div class="card" style="background:#f9f9f9; margin-bottom:.5rem">
+  <div style="display:flex; justify-content:space-between; align-items:center">
+    <div>
+      <strong>{{ name }}</strong>
+      <span class="badge {{ 'badge-ok' if t.get('enabled', True) else 'badge-off' }}">
+        {{ 'enabled' if t.get('enabled', True) else 'disabled' }}
+      </span><br>
+      <small style="color:#555">{{ t.get('user','root') }}@{{ t.get('host','?') }}:{{ t.get('port',22) }}</small><br>
+      {% for fwd in t.get('forwards', []) %}
+      <small>localhost:{{ fwd.local_port }} → {{ fwd.remote_host }}:{{ fwd.remote_port }}</small><br>
+      {% endfor %}
+    </div>
+    <div class="actions" style="flex-direction:column">
+      <button class="btn btn-secondary"
+              hx-get="/tunnels/{{ name }}"
+              hx-target="#tunnel-panel"
+              hx-swap="innerHTML"
+              hx-on:htmx:after-swap="document.getElementById('tunnel-panel').style.display='block'">
+        Edit
+      </button>
+      <button class="btn btn-secondary"
+              hx-post="/tunnels/{{ name }}/toggle"
+              hx-target="#tunnel-list" hx-swap="innerHTML">
+        {{ 'Disable' if t.get('enabled', True) else 'Enable' }}
+      </button>
+      <button class="btn btn-danger"
+              hx-post="/tunnels/{{ name }}/delete"
+              hx-target="#tunnel-list" hx-swap="innerHTML"
+              hx-confirm="Delete tunnel '{{ name }}'?">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+{% else %}
+<p style="color:#888; font-size:.85rem">No tunnels configured.</p>
+{% endfor %}

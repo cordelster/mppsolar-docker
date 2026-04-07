@@ -1,0 +1,16 @@
+#!/bin/sh
+# Source Docker ENV vars from s6's container environment store
+for f in /run/s6/container_environment/*; do
+    [ -f "$f" ] && export "$(basename "$f")=$(cat "$f")"
+done
+
+CONFIG_FILE="${CONFIG_FILE:-/config/mpp-solar.conf}"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "[mppsolar] No legacy config at $CONFIG_FILE"
+    echo "[mppsolar] Using per-inverter services from /config/inverters/ — sleeping."
+    exec sleep infinity
+fi
+
+echo "[mppsolar] starting — config: $CONFIG_FILE"
+exec mpp-solar --daemon -C "$CONFIG_FILE"

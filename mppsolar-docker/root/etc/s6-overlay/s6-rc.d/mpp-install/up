@@ -1,0 +1,2 @@
+#!/bin/execlineb -P
+/bin/bash /etc/s6-overlay/scripts/mpp-install.sh

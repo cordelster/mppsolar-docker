@@ -1,0 +1,46 @@
+[SETUP]
+# Seconds between polling cycles when running under s6.
+# Also set the PAUSE env var in docker-compose.yml to the same value
+# so the s6 run script sleeps the right amount between passes.
+pause = 60
+
+# MQTT broker reachable from inside the container.
+# If running the broker on the Docker host, use the host-gateway address
+# (typically 172.17.0.1 on Linux, or host.docker.internal on Mac/Windows).
+mqtt_broker = 172.17.0.1
+mqtt_port = 1883
+# mqtt_user =
+# mqtt_pass =
+
+
+# ── RFC2217 serial port connection ────────────────────────────────────────────
+# pyserial's serial_for_url() handles rfc2217:// natively — no PTY bridge needed.
+#
+# ser2net must be configured in telnet (RFC2217) mode on the remote:
+#   ser2net v3 syntax:  2000:telnet:0:/dev/ttyUSB0:2400
+#   ser2net v4 syntax:  see /etc/ser2net.yaml (connection: accepter: telnet,tcp,2000)
+#
+# Quick connection test before starting the container:
+#   python3 -c "
+#     import serial
+#     s = serial.serial_for_url('rfc2217://solarsystem:2000', 2400, timeout=5)
+#     print(s)
+#     s.close()
+#   "
+#
+# SSH tunnel (no VPN needed for ad-hoc testing):
+#   ssh -N -L 2000:localhost:2000 pi@solarsystem
+#   then use: port = rfc2217://localhost:2000
+# ─────────────────────────────────────────────────────────────────────────────
+
+[INVERTER]
+port = rfc2217://solarsystem:2000
+protocol = PI30
+baud = 2400
+command = QPIGS
+tag = solar
+outputs = hassd_mqtt
+
+# Optional: restrict which response fields are published
+# filter =
+# exclfilter =

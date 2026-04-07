@@ -1,0 +1,8 @@
+name: "mpp-solar Docker"
+slug: "mppsolar"
+version: "0.1.0"
+description: "mpp-solar inverter management — web UI, multi-inverter supervision, mDNS discovery, SSH tunnelling"
+arch:
+  - amd64
+  - aarch64
+  - armv7

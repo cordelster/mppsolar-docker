@@ -1,0 +1,25 @@
+name: "mpp-solar"
+description: "mpp-solar inverter management — web UI, multi-inverter S6 supervision, mDNS ser2net discovery, SSH tunnelling"
+version: "0.1.0"
+slug: "mppsolar"
+url: "https://github.com/jblance/mpp-solar"
+init: false
+
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - armhf
+
+# Persistent addon data lives in /data/ inside the container
+map:
+  - data:rw
+
+# Web UI served through HA ingress (no exposed port needed)
+ingress: true
+ingress_port: 7669
+panel_icon: mdi:solar-power
+panel_title: mpp-solar
+
+options: {}
+schema: {}

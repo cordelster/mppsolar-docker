@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mpp-solar{% block title %}{% endblock %}</title>
+  <script src="/static/htmx.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+
+    nav {
+      background: #16213e; color: #e0e0e0; padding: .75rem 1.5rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    nav .brand { font-weight: 700; font-size: 1.1rem; color: #f5a623; letter-spacing: .05em; }
+    nav a { color: #e0e0e0; text-decoration: none; font-size: .9rem; }
+    nav a:hover { color: #f5a623; }
+
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.4rem; margin-bottom: 1.25rem; color: #16213e; }
+    h2 { font-size: 1.1rem; margin-bottom: .75rem; color: #16213e; }
+
+    .card {
+      background: #fff; border-radius: 8px; padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.1); margin-bottom: 1rem;
+    }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+    button, .btn {
+      display: inline-block; padding: .45rem 1rem; border-radius: 5px;
+      border: none; cursor: pointer; font-size: .875rem; text-decoration: none;
+      transition: opacity .15s;
+    }
+    button:hover, .btn:hover { opacity: .85; }
+    .btn-primary { background: #f5a623; color: #16213e; font-weight: 600; }
+    .btn-danger  { background: #e05252; color: #fff; }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+
+    form label { display: block; font-size: .8rem; font-weight: 600; color: #555; margin: .6rem 0 .2rem; }
+    form input, form select, form textarea {
+      width: 100%; padding: .4rem .6rem; border: 1px solid #ccc;
+      border-radius: 4px; font-size: .9rem;
+    }
+    form textarea { min-height: 8rem; font-family: monospace; }
+    .form-row { display: flex; gap: .5rem; align-items: flex-end; }
+    .form-row > * { flex: 1; }
+
+    .badge {
+      display: inline-block; padding: .15rem .5rem; border-radius: 12px;
+      font-size: .75rem; font-weight: 600;
+    }
+    .badge-ok   { background: #d4edda; color: #155724; }
+    .badge-off  { background: #f8d7da; color: #721c24; }
+
+    .actions { display: flex; gap: .5rem; margin-top: 1rem; }
+    #inverter-panel { display: none; }
+    #inverter-panel:not(:empty) { display: block; }
+    #tunnel-panel { display: none; }
+    #tunnel-panel:not(:empty) { display: block; }
+    /* Inverter health card */
+    .inverter-card { display: flex; flex-direction: column; gap: .5rem; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-top h2 { margin: 0; }
+    .inverter-status { border-top: 1px solid #eee; padding-top: .6rem; min-height: 2rem; }
+
+    .status-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-up   { background: #28a745; box-shadow: 0 0 4px #28a74580; }
+    .dot-down { background: #dc3545; }
+    .status-label  { font-weight: 600; font-size: .85rem; }
+    .status-uptime { font-size: .78rem; color: #888; margin-left: auto; }
+
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .3rem .8rem; margin-bottom: .4rem; }
+    .metric { display: flex; justify-content: space-between; font-size: .82rem; }
+    .metric-label { color: #666; }
+    .metric-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .metric-warn  { color: #dc3545; }
+
+    .status-footer { font-size: .75rem; color: #999; display: flex; gap: .4rem; }
+    .status-waiting { font-size: .8rem; color: #aaa; font-style: italic; }
+
+    .htmx-indicator { display: none; }
+    .htmx-request .htmx-indicator { display: inline; }
+  </style>
+</head>
+<body>
+<nav>
+  <span class="brand">&#9728; mpp-solar</span>
+  <a href="/">Inverters</a>
+  <a href="/settings">Settings</a>
+  <a href="/about" style="margin-left:auto">About</a>
+</nav>
+<main>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

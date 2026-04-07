@@ -1,0 +1,37 @@
+services:
+  mppsolar:
+    build:
+      context: ..
+      dockerfile: mppsolar-docker/Dockerfile
+    container_name: mppsolar
+    ports:
+      - "7669:7669"
+    volumes:
+      # Config — inverter configs live in ./config/inverters/*.conf
+      - ./config:/config
+      # Dev mode — mount mpp-solar source to override the APK package.
+      # mpp-install installs it as an editable pip package on container start.
+      # Comment out for production (uses py3-jb-mppsolar from JamBox APK).
+      # - ../../mpp-solar:/src/mpp-solar:ro
+    environment:
+      TZ: America/Los_Angeles
+      MPP_NO_FORK: "1"
+    restart: unless-stopped
+
+  # ── Single-shot test service ──────────────────────────────────────────────
+  # Runs mpp-solar once against the first inverter config, then exits.
+  # Usage: docker compose run --rm mppsolar-test
+  mppsolar-test:
+    build:
+      context: ..
+      dockerfile: mppsolar-docker/Dockerfile
+    container_name: mppsolar-test
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "mpp-solar -C $(ls /config/inverters/*.conf 2>/dev/null | head -1)"
+    volumes:
+      - ./config:/config
+    environment:
+      TZ: America/Los_Angeles
+    profiles:
+      - test

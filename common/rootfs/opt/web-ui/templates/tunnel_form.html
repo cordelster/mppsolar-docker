@@ -1,0 +1,63 @@
+<h2>{{ 'Edit' if name else 'New' }} Tunnel{% if name %}: {{ name }}{% endif %}</h2>
+
+<form hx-post="/tunnels/{{ name or '__new__' }}"
+      hx-target="#tunnel-list" hx-swap="innerHTML">
+
+  {% if not name %}
+  <label>Tunnel Name (no spaces)</label>
+  <input type="text" name="name" required placeholder="pi-shed">
+  {% endif %}
+
+  <label>Remote Host</label>
+  <input type="text" name="host" value="{{ tunnel.host if tunnel else '' }}" placeholder="192.168.1.100" required>
+
+  <div class="form-row">
+    <div>
+      <label>SSH Port</label>
+      <input type="number" name="port" value="{{ tunnel.port if tunnel else 22 }}">
+    </div>
+    <div>
+      <label>SSH User</label>
+      <input type="text" name="user" value="{{ tunnel.user if tunnel else 'root' }}">
+    </div>
+  </div>
+
+  <label>Private Key Path</label>
+  <input type="text" name="key" value="{{ tunnel.key if tunnel else '/config/ssh/id_rsa' }}">
+
+  <h2 style="margin-top:1rem">Port Forwards</h2>
+  <p style="font-size:.8rem; color:#555; margin-bottom:.5rem">
+    Each forward makes a remote ser2net port available as <code>socket://localhost:LOCAL_PORT</code>.
+  </p>
+
+  {% set forwards = tunnel.forwards if tunnel else [{}] %}
+  {% for fwd in forwards %}
+  <div class="form-row" style="margin-bottom:.4rem">
+    <div>
+      <label>Local Port</label>
+      <input type="number" name="local_port" value="{{ fwd.get('local_port','') }}" placeholder="2200">
+    </div>
+    <div>
+      <label>Remote Host</label>
+      <input type="text" name="remote_host" value="{{ fwd.get('remote_host','localhost') }}">
+    </div>
+    <div>
+      <label>Remote Port</label>
+      <input type="number" name="remote_port" value="{{ fwd.get('remote_port','') }}" placeholder="2400">
+    </div>
+  </div>
+  {% endfor %}
+
+  <label style="margin-top:.75rem">
+    <input type="checkbox" name="enabled" {{ 'checked' if not tunnel or tunnel.get('enabled', True) }}>
+    Enabled
+  </label>
+
+  <div class="actions" style="margin-top:1rem">
+    <button type="submit" class="btn btn-primary">Save &amp; Apply</button>
+    <button type="button" class="btn btn-secondary"
+            onclick="document.getElementById('tunnel-panel').innerHTML=''">
+      Cancel
+    </button>
+  </div>
+</form>

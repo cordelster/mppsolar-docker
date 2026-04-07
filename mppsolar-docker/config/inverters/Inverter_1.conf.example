@@ -1,0 +1,15 @@
+[SETUP]
+pause = 30
+mqtt_broker = 192.168.1.10
+mqtt_port = 1883
+# mqtt_user =
+# mqtt_pass =
+mqtt_topic = mpp-solar
+
+[Inverter_1]
+port = rfc2217://solarsystem:2000
+protocol = PI30
+baud = 2400
+command = QPIGS
+tag = solar
+outputs = hassd_mqtt

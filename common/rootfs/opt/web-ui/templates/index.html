@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} — Inverters{% endblock %}
+{% block content %}
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem">
+  <h1 style="margin:0">Inverters</h1>
+  <button class="btn btn-primary"
+          hx-get="/inverters/new"
+          hx-target="#inverter-panel"
+          hx-swap="innerHTML">
+    + Add Inverter
+  </button>
+</div>
+
+<div id="inverter-panel" class="card" style="margin-bottom:1.5rem"></div>
+
+<div id="inverter-list">
+  {% include "inverter_list.html" %}
+</div>
+
+{% endblock %}

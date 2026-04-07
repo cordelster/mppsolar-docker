@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+# $1 = exit code of the run script
+# $2 = signal number (if killed by signal, otherwise 256)
+#
+# Returning 0 allows s6 to restart the service.
+# s6 applies a default 1s cooldown between restarts automatically.
+echo "[mppsolar] finish called — exit=$1 signal=$2"
+exit 0
