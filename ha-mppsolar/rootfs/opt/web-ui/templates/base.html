@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>mpp-solar{% block title %}{% endblock %}</title>
-  <script src="/static/htmx.min.js"></script>
+  <script src="{{ url_for('static', filename='htmx.min.js') }}"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
@@ -88,9 +88,9 @@
 <body>
 <nav>
   <span class="brand">&#9728; mpp-solar</span>
-  <a href="/">Inverters</a>
-  <a href="/settings">Settings</a>
-  <a href="/about" style="margin-left:auto">About</a>
+  <a href="{{ url_for('index') }}">Inverters</a>
+  <a href="{{ url_for('settings') }}">Settings</a>
+  <a href="{{ url_for('about') }}" style="margin-left:auto">About</a>
 </nav>
 <main>
   {% block content %}{% endblock %}

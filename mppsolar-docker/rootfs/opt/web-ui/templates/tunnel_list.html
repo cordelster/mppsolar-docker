@@ -13,19 +13,19 @@
     </div>
     <div class="actions" style="flex-direction:column">
       <button class="btn btn-secondary"
-              hx-get="/tunnels/{{ name }}"
+              hx-get="{{ url_for('tunnel_edit', name=name) }}"
               hx-target="#tunnel-panel"
               hx-swap="innerHTML"
               hx-on:htmx:after-swap="document.getElementById('tunnel-panel').style.display='block'">
         Edit
       </button>
       <button class="btn btn-secondary"
-              hx-post="/tunnels/{{ name }}/toggle"
+              hx-post="{{ url_for('tunnel_toggle', name=name) }}"
               hx-target="#tunnel-list" hx-swap="innerHTML">
         {{ 'Disable' if t.get('enabled', True) else 'Enable' }}
       </button>
       <button class="btn btn-danger"
-              hx-post="/tunnels/{{ name }}/delete"
+              hx-post="{{ url_for('tunnel_delete', name=name) }}"
               hx-target="#tunnel-list" hx-swap="innerHTML"
               hx-confirm="Delete tunnel '{{ name }}'?">
         Delete

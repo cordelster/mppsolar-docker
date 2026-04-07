@@ -5,7 +5,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem">
   <h1 style="margin:0">Inverters</h1>
   <button class="btn btn-primary"
-          hx-get="/inverters/new"
+          hx-get="{{ url_for('inverter_new') }}"
           hx-target="#inverter-panel"
           hx-swap="innerHTML">
     + Add Inverter

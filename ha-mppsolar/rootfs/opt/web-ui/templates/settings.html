@@ -13,7 +13,7 @@
       <span class="badge badge-off">No key</span>
     {% endif %}
   </p>
-  <form method="post" action="/settings/ssh-key">
+  <form method="post" action="{{ url_for('upload_ssh_key') }}">
     <label>Paste private key (replaces existing)</label>
     <textarea name="key_data" placeholder="-----BEGIN OPENSSH PRIVATE KEY-----&#10;..."></textarea>
     <div class="actions">
@@ -34,7 +34,7 @@
 
   <div style="margin-top:1rem">
     <button class="btn btn-primary"
-            hx-get="/tunnels/new"
+            hx-get="{{ url_for('tunnel_new') }}"
             hx-target="#tunnel-panel"
             hx-swap="innerHTML">
       + Add Tunnel

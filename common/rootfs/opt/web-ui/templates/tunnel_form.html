@@ -1,6 +1,6 @@
 <h2>{{ 'Edit' if name else 'New' }} Tunnel{% if name %}: {{ name }}{% endif %}</h2>
 
-<form hx-post="/tunnels/{{ name or '__new__' }}"
+<form hx-post="{{ url_for('tunnel_save', name=name if name else '__new__') }}"
       hx-target="#tunnel-list" hx-swap="innerHTML">
 
   {% if not name %}

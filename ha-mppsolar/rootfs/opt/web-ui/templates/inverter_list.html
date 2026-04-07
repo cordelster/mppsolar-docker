@@ -5,13 +5,13 @@
       <h2>{{ name }}</h2>
       <div class="actions">
         <button class="btn btn-secondary"
-                hx-get="/inverters/{{ name }}"
+                hx-get="{{ url_for('inverter_edit', name=name) }}"
                 hx-target="#inverter-panel"
                 hx-swap="innerHTML">
           Edit
         </button>
         <button class="btn btn-danger"
-                hx-post="/inverters/{{ name }}/delete"
+                hx-post="{{ url_for('inverter_delete', name=name) }}"
                 hx-target="#inverter-list"
                 hx-swap="innerHTML"
                 hx-confirm="Delete inverter '{{ name }}'?">
@@ -21,7 +21,7 @@
     </div>
 
     <div class="inverter-status"
-         hx-get="/inverters/{{ name }}/status"
+         hx-get="{{ url_for('inverter_status', name=name) }}"
          hx-trigger="load, every 30s"
          hx-swap="innerHTML">
       <span class="status-waiting">Loading...</span>
