@@ -6,7 +6,6 @@ ARG S6_OVERLAY_VERSION=3.2.0.0
 # ── Base packages ─────────────────────────────────────────────────────────────
 RUN apk add --no-cache \
     python3 \
-    py3-pip \
     bash \
     wget \
     xz \
@@ -32,13 +31,12 @@ RUN echo "https://jambox-it.github.io/apk-repo/v3.23/JamBox" >> /etc/apk/reposit
  && apk add --no-cache \
     py3-jb-mppsolar \
     py3-bluepy \
-    py3-pymodbus
-
-# ── Web UI dependencies ───────────────────────────────────────────────────────
-# flask + zeroconf are not part of mpp-solar; py3-jb-mppsolar covers the rest.
-RUN pip3 install --no-cache-dir --break-system-packages \
+    py3-pymodbus \
+    py3-pip \
+ && pip3 install --no-cache-dir --break-system-packages \
     "flask>=3.0" \
-    "zeroconf>=0.130"
+    "zeroconf>=0.130" \
+ && apk del py3-pip
 
 # ── Common rootfs (web UI, SSH tunnel, cont-init, services.d) ─────────────────
 # Build context is the repo root (..); this COPY covers both variants.

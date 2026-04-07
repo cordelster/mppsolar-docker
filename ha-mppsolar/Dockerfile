@@ -9,12 +9,12 @@ RUN echo "https://jambox-it.github.io/apk-repo/v3.23/JamBox" >> /etc/apk/reposit
     py3-jb-mppsolar \
     py3-bluepy \
     py3-pymodbus \
-    dropbear
-
-# ── Web UI dependencies ───────────────────────────────────────────────────────
-RUN pip3 install --no-cache-dir --break-system-packages \
+    py3-pip \
+    dropbear \
+ && pip3 install --no-cache-dir --break-system-packages \
     "flask>=3.0" \
-    "zeroconf>=0.130"
+    "zeroconf>=0.130" \
+ && apk del py3-pip
 
 # ── Common rootfs (synced from ../common/rootfs/ via `make sync`) ─────────────
 # Build context is ha-mppsolar/ — rootfs/ is populated before committing.
