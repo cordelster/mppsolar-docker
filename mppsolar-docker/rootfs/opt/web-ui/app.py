@@ -25,6 +25,25 @@ from zeroconf import ServiceBrowser, Zeroconf
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
+
+class _IngressFix:
+    """Set SCRIPT_NAME from X-Ingress-Path so url_for() and static URLs work
+    correctly when served through HA ingress proxy."""
+    def __init__(self, wsgi_app):
+        self._app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        prefix = environ.get("HTTP_X_INGRESS_PATH", "").rstrip("/")
+        if prefix:
+            environ["SCRIPT_NAME"] = prefix
+            path = environ.get("PATH_INFO", "")
+            if path.startswith(prefix):
+                environ["PATH_INFO"] = path[len(prefix):] or "/"
+        return self._app(environ, start_response)
+
+
+app.wsgi_app = _IngressFix(app.wsgi_app)
+
 _CFG_BASE   = Path(os.environ.get("MPP_CONFIG_DIR", "/config"))
 INVERTER_DIR = _CFG_BASE / "inverters"
 TUNNEL_DIR   = _CFG_BASE / "ssh" / "tunnels"
