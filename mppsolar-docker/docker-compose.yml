@@ -1,8 +1,8 @@
 services:
   mppsolar:
     build:
-      context: ..
-      dockerfile: mppsolar-docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: mppsolar
     ports:
       - "7669:7669"
@@ -23,8 +23,8 @@ services:
   # Usage: docker compose run --rm mppsolar-test
   mppsolar-test:
     build:
-      context: ..
-      dockerfile: mppsolar-docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: mppsolar-test
     entrypoint: ["/bin/sh", "-c"]
     command: >
