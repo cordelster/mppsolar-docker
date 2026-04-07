@@ -9,6 +9,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
     uses: JamBox-IT/jambox-workflows/.github/workflows/build-ha-addon.yml@build-ha-addon/v1
     with:
       addon_path: 'ha-mppsolar'

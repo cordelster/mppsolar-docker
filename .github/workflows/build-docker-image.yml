@@ -9,6 +9,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
     uses: JamBox-IT/jambox-workflows/.github/workflows/build-docker-image.yml@build-docker-image/v1
     with:
       image_path: 'mppsolar-docker'
