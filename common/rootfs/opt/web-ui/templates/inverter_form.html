@@ -4,7 +4,7 @@
 
 <h2>{{ 'New Inverter' if is_new else 'Edit: ' + name }}</h2>
 
-<form hx-post="{{ '/inverters/new' if is_new else '/inverters/' + name }}"
+<form hx-post="{{ url_for('inverter_create') if is_new else url_for('inverter_save', name=name) }}"
       hx-target="#inverter-list"
       hx-swap="innerHTML">
 
