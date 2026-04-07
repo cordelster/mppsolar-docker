@@ -13,11 +13,18 @@ RUN apk add --no-cache \
     dropbear
 
 # ── s6-overlay ────────────────────────────────────────────────────────────────
-RUN ARCH=$(uname -m) \
+# Use TARGETARCH (set by buildx) — uname -m is unreliable under QEMU emulation.
+ARG TARGETARCH
+RUN case "${TARGETARCH}" in \
+      amd64)  S6_ARCH="x86_64"  ;; \
+      arm64)  S6_ARCH="aarch64" ;; \
+      arm)    S6_ARCH="arm"     ;; \
+      *) echo "Unsupported arch: ${TARGETARCH}"; exit 1 ;; \
+    esac \
  && wget -qO /tmp/s6-noarch.tar.xz \
       "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" \
  && wget -qO /tmp/s6-arch.tar.xz \
-      "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz" \
+      "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" \
  && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
  && tar -C / -Jxpf /tmp/s6-arch.tar.xz \
  && rm /tmp/s6-*.tar.xz
