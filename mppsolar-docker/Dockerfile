@@ -38,12 +38,12 @@ RUN echo "https://jambox-it.github.io/apk-repo/v3.23/JamBox" >> /etc/apk/reposit
     "zeroconf>=0.130" \
  && apk del py3-pip
 
-# ── Common rootfs (web UI, SSH tunnel, cont-init, services.d) ─────────────────
-# Build context is the repo root (..); this COPY covers both variants.
-COPY common/rootfs/ /
+# ── Common rootfs (synced from ../common/rootfs/ via `make sync`) ─────────────
+# Build context is mppsolar-docker/ — rootfs/ is populated before committing.
+COPY rootfs/ /
 
-# ── Docker-specific rootfs overrides (mpp-install dev service, mppsolar longrun)
-COPY mppsolar-docker/root/ /
+# ── Docker-specific overrides (mpp-install dev service, mppsolar longrun) ─────
+COPY root/ /
 
 # ── Ensure scripts are executable ────────────────────────────────────────────
 RUN chmod +x \

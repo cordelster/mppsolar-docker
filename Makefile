@@ -5,6 +5,7 @@
 # CI builds from the committed copy — no sync step needed in the workflow.
 sync:
 	rsync -av --delete common/rootfs/ ha-mppsolar/rootfs/
+	rsync -av --delete common/rootfs/ mppsolar-docker/rootfs/
 
 # ── Standalone Docker ─────────────────────────────────────────────────────────
 build:
