@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %} — About{% endblock %}
+{% block content %}
+
+<h1>About</h1>
+
+<div class="card" style="max-width:600px">
+  <h2>mpp-solar Docker</h2>
+  <p style="font-size:.9rem; color:#555; margin:.5rem 0 1rem">
+    A containerised management layer for
+    <a href="https://github.com/jblance/mpp-solar" target="_blank" rel="noopener">mpp-solar</a>
+    — web UI, multi-inverter S6 supervision, mDNS ser2net discovery, and SSH tunnelling.
+  </p>
+
+  <h2 style="margin-top:1.25rem">Project links</h2>
+  <ul style="font-size:.9rem; line-height:1.8; padding-left:1.2rem; margin-top:.5rem">
+    <li><a href="https://github.com/jblance/mpp-solar" target="_blank" rel="noopener">mpp-solar (jblance)</a></li>
+    <li><a href="https://jambox-it.github.io/apk-repo/v3.23/JamBox/" target="_blank" rel="noopener">JamBox APK repo</a></li>
+  </ul>
+
+  <h2 style="margin-top:1.25rem">Support the developers</h2>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:.75rem">
+    <a class="btn btn-primary"
+       href="https://www.paypal.com/donate/?hosted_button_id=5RBTFAV64XGJ2"
+       target="_blank" rel="noopener">
+      PayPal — Corey
+    </a>
+    <a class="btn btn-primary"
+       href="https://www.buymeacoffee.com/jblance"
+       target="_blank" rel="noopener">
+      Buy jblance a coffee
+    </a>
+  </div>
+</div>
+
+{% endblock %}

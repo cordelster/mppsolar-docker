@@ -1,0 +1,122 @@
+{% set is_new = not name %}
+{% set s = cfg[name] if cfg and cfg.has_section(name) else {} %}
+{% set setup = cfg['SETUP'] if cfg and cfg.has_section('SETUP') else {} %}
+
+<h2>{{ 'New Inverter' if is_new else 'Edit: ' + name }}</h2>
+
+<form hx-post="{{ '/inverters/new' if is_new else '/inverters/' + name }}"
+      hx-target="#inverter-list"
+      hx-swap="innerHTML">
+
+  <div class="form-row">
+    <div>
+      <label>Inverter Name <small style="font-weight:400">(filename &amp; config section, no spaces)</small></label>
+      <input type="text" name="name" value="{{ name }}"
+             {% if not is_new %}readonly{% endif %}
+             required placeholder="Inverter_1">
+    </div>
+    <div>
+      <label>Protocol</label>
+      <input type="text" name="protocol" value="{{ s.get('protocol','PI30') }}">
+    </div>
+    <div>
+      <label>Baud Rate</label>
+      <input type="number" name="baud" value="{{ s.get('baud','2400') }}">
+    </div>
+  </div>
+
+  <label>Port</label>
+  <div class="form-row">
+    <input type="text" name="port" value="{{ s.get('port','') }}"
+           placeholder="/dev/hidraw0, /dev/ttyUSB0, or socket://host:port">
+    {% if discovered %}
+    <select onchange="this.previousElementSibling.value=this.value; this.value='';"
+            style="flex:0 0 auto; max-width:220px">
+      <option value="">— discovered ser2net —</option>
+      {% for d in discovered %}
+      <option value="socket://{{ d.host }}:{{ d.port }}">{{ d.name }} ({{ d.host }}:{{ d.port }})</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+  </div>
+
+  <label>Command(s) <small style="font-weight:400">comma-separated</small></label>
+  <input type="text" name="command"
+         value="{{ s.get('command','QPIGS') | replace('#', ', ') }}"
+         placeholder="QPIGS, QPIRI">
+
+  <label>Output(s) <small style="font-weight:400">comma-separated</small></label>
+  <input type="text" name="outputs" id="outputs-field" value="{{ s.get('outputs','mqtt') }}"
+         placeholder="mqtt, screen, prom_pushd ..."
+         oninput="togglePushUrl()">
+
+  <div id="push-url-row" style="display:{{ 'block' if 'prom_pushd' in s.get('outputs','') else 'none' }}">
+    <label>Prometheus Pushgateway URL</label>
+    <input type="text" name="push_url" value="{{ s.get('push_url','') }}"
+           placeholder="http://pushgateway:9091/metrics/job/mppsolar">
+  </div>
+
+  <div class="form-row" style="margin-top:.5rem">
+    <div>
+      <label>Poll Pause (s)</label>
+      <input type="number" name="pause" value="{{ setup.get('pause','30') }}" min="5">
+    </div>
+    <div>
+      <label>Tag <small style="font-weight:400">optional output tag</small></label>
+      <input type="text" name="tag" value="{{ s.get('tag','') }}" placeholder="">
+    </div>
+    <div>
+      <label>Dev <small style="font-weight:400">device identifier</small></label>
+      <input type="text" name="dev" value="{{ s.get('dev','') }}" placeholder="">
+    </div>
+  </div>
+
+  <h2 style="margin-top:1.25rem">MQTT / Setup</h2>
+
+  <div class="form-row">
+    <div>
+      <label>MQTT Broker</label>
+      <input type="text" name="mqtt_broker" value="{{ setup.get('mqtt_broker','') }}"
+             placeholder="192.168.1.10">
+    </div>
+    <div>
+      <label>MQTT Port</label>
+      <input type="number" name="mqtt_port" value="{{ setup.get('mqtt_port','1883') }}">
+    </div>
+  </div>
+
+  <label>MQTT Topic</label>
+  <input type="text" name="mqtt_topic" value="{{ setup.get('mqtt_topic','mpp-solar') }}">
+
+  <div class="form-row">
+    <div>
+      <label>MQTT User</label>
+      <input type="text" name="mqtt_user" value="{{ setup.get('mqtt_user','') }}">
+    </div>
+    <div>
+      <label>MQTT Password</label>
+      <input type="password" name="mqtt_pass" value="{{ setup.get('mqtt_pass','') }}">
+    </div>
+  </div>
+
+  <label>Allowed MQTT Commands <small style="font-weight:400">comma-separated (REGEX supported), leave blank to disable</small></label>
+  <input type="text" name="mqtt_allowed_cmds"
+         value="{{ setup.get('mqtt_allowed_cmds','') }}"
+         placeholder="POP00,POP01,PBCV44.0 ...">
+
+  <div class="actions" style="margin-top:1.25rem">
+    <button type="submit" class="btn btn-primary">Save &amp; Apply</button>
+    <button type="button" class="btn btn-secondary"
+            onclick="document.getElementById('inverter-panel').innerHTML=''">
+      Cancel
+    </button>
+  </div>
+</form>
+
+<script>
+function togglePushUrl() {
+  var outputs = document.getElementById('outputs-field').value;
+  document.getElementById('push-url-row').style.display =
+    outputs.indexOf('prom_pushd') !== -1 ? 'block' : 'none';
+}
+</script>

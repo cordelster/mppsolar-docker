@@ -1,0 +1,5 @@
+#!/bin/sh
+for f in /run/s6/container_environment/*; do
+    [ -f "$f" ] && export "$(basename "$f")=$(cat "$f")"
+done
+exec python3 /opt/inverter-manager/manager.py

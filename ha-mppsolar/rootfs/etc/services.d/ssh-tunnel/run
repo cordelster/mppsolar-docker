@@ -1,0 +1,8 @@
+#!/bin/sh
+for f in /run/s6/container_environment/*; do
+    [ -f "$f" ] && export "$(basename "$f")=$(cat "$f")"
+done
+if [ ! -d /config/ssh/tunnels ] || [ -z "$(ls -A /config/ssh/tunnels 2>/dev/null)" ]; then
+    exec sleep 3600
+fi
+exec python3 /opt/ssh-tunnel/manager.py
